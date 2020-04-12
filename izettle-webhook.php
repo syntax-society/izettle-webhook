@@ -4,10 +4,23 @@ require_once('Event.php');
 
 use znexx\Logger;
 
-$headers = apache_request_headers();
-$signature = $headers['X-iZettle-Signature'];
+$json = file_get_contents('config.json');
+$config = json_decode($json, true);
 
-if ($signature === '') {
+$logger = new Logger(
+	Logger::NONE,
+	Logger::DEEP_DEBUG,
+	$config['logFilename']
+);
+
+$logger->deep_debug('Reading Apache request headers and extracting signature');
+$headers = apache_request_headers();
+
+if (in_array('X-iZettle-Signature', $headers) && $signature !== '') {
+	$logger->deep_debug('Found X-iZettle-Signature');
+	$signature = $headers['X-iZettle-Signature'];
+} else {
+	$logger->warning('Request received without signature. Sending empty HTTP 200 reply.');
 	http_response_code(200);
 	die();
 }
@@ -43,22 +56,15 @@ function saveMessage(string $filename, array $message) {
 	file_put_contents($filename, $json, LOCK_EX);
 }
 
-$logger = new Logger(
-	Logger::NONE,
-	Logger::DEBUG,
-	$config['logFilename']
-);
-
-// read config
-$json = file_get_contents('config.json');
-$config = json_decode($json, true);
-
-// read request body
+// reading request body
+$logger->deep_debug('Reading request body');
 $body = file_get_contents('php://input');
 $eventData = json_decode($body, true);
 
+$logger->deep_debug('Saving event');
 saveMessage($config['eventLogFilename'], $eventData);
 
+$logger->deep_debug('Creating Event object');
 $event = new Event($eventData);
 
 if (!$event->isValid($signature, $signingKey)) {
@@ -79,8 +85,9 @@ if (!$event->isValid($signature, $signingKey)) {
 /body></html>
 RESPONSE;
 	die();
+} else {
+	$logger->deep_debug('Request authorized, handling event');
+	$event->handle($logger, $config);
 }
-
-$event->handle($logger, $config);
 $logger->debug('Webhook finished properly');
 ?>
