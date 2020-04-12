@@ -11,7 +11,7 @@ require_once('WebhookEventInterface.php');
 
 class ProductUpdated extends \Model implements \SyntaxSociety\WebhookEventInterface  {
 
-	public function perform(Logger $logger): void {
+	public function perform(Logger $logger, array $config): void {
 		$productName = $this->newEntity->name;
 		$logger->info("Produkt $productName uppdaterad");
 

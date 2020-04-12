@@ -13,17 +13,60 @@ use znexx\Logger;
 
 class PurchaseCreated extends \Model implements \SyntaxSociety\WebhookEventInterface {
 
-	public function perform(Logger $logger): void {
+	public function perform(Logger $logger, array $config): void {
 		foreach ($this->products as $product) {
-			$this->handleProduct($logger, $product);
+			$this->handleProduct($logger, $config, $product);
 		}
 	}
 
-	protected function handleProduct(Logger $logger, Product $product) {
+	protected function handleProduct(Logger $logger, array $config, Product $product) {
 		switch ($product->name) {
 		case 'Medlemsavgift':
 			$nickname = $product->variantName;
-			$logger->info("Medlemsavgift för $nickname betald");
+			$dateTime = new \DateTime($this->created);
+			$year = $dateTime->format('Y');
+			$paidDate = $dateTime->format('Y-m-d');
+			$amount = $product->unitPrice / 100; // because enhet är ören
+
+			try {
+				$this->performInsert(
+					$config,
+					'member_fees',
+					[
+						'nickname' => $nickname,
+						'year' => $year,
+						'paid_date' => $paidDate,
+						'amount' => $amount,
+					]
+				);
+				$logger->info("Medlemsavgift för $nickname betald");
+			} catch (\Exception $e) {
+				$logger->error($e->getMessage());
+			}
+			break;
+		case 'Partyavgift':
+			$nickname = $product->variantName;
+			$partyTitle = 'herp derp party';
+			$partyDate = '2001-01-01';
+			$fee = 100;
+			$paid = 100;
+
+			try {
+				$this->performInsert(
+					$config,
+					'member_fees',
+					[
+						'nickname' => $nickname,
+						'party_title' => $partyTitle,
+						'party_date' => $paidDate,
+						'fee' => $fee,
+						'paid' => $paid,
+					]
+				);
+				$logger->info("Partyavgift för $nickname betald");
+			} catch (\Exception $e) {
+				$logger->error($e->getMessage());
+			}
 			break;
 		}
 	}

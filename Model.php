@@ -6,6 +6,67 @@ abstract class Model implements JsonSerializable {
 
 	abstract function getFieldSpecifications(): array;
 
+	private function connectSql(array $config): mysqli {
+		$servername = "localhost";
+		$username = "pi";
+		$password = "hallonfastpaengelska";
+		$database = "syntaxsociety";
+
+		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+		$conn = new mysqli(
+			$config['mysqlHostname'],
+			$config['mysqlUsername'],
+			$config['mysqlPassword'],
+			$config['mysqlDatabase'],
+		);
+
+		if ($conn->connect_error) {
+			die("Connection failed: " . $conn->connect_error);
+		}
+
+		return $conn;
+	}
+
+	private function disconnectSql(mysqli $conn): void {
+		$conn->close();
+	}
+
+	private function getColumnNames(mysqli $conn, string $tablename): array {
+		$stmt = $conn->prepare("select COLUMN_NAME from information_schema.columns where table_name = \"$tablename\"");
+		$stmt->execute();
+		$rows = $stmt->get_result();
+		$column_specs = iterator_to_array($rows);
+		$stmt->close();
+		return array_map(function($value) {return $value['COLUMN_NAME'];}, $column_specs);
+	}
+
+	protected function performInsert(array $config, string $tablename, array $data): void {
+		$conn = $this->connectSql($config);
+
+		$column_names = $this->getColumnNames($conn, $tablename);
+		$diff_elements = array_diff(array_keys($data), $column_names); // checks if POST and SQL column names are the same
+		if (count($diff_elements) === 0) {
+			$placeholders = str_repeat('?, ', count($data) - 1) . '?';
+			$sql = "insert into $tablename values ($placeholders)";
+
+			$types = str_repeat('s', count($data));
+			$data = array_map(function($value) {if ($value === "") return NULL; else return $value;}, $data);
+
+			$stmt = $conn->prepare($sql);
+			$stmt->bind_param($types, ...array_values($data));
+			$stmt->execute();
+			$stmt->close();
+		} else {
+			throw new \Exception(
+				'Provided incorrect data:' . PHP_EOL .
+				json_encode($diff_elements, JSON_PRETTY_PRINT) . PHP_EOL .
+				'Valid indices: ' . join(', ', $column_names) . PHP_EOL
+			);
+		}
+
+		$this->disconnectSql($conn);
+	}
+
 	function __construct($data = []) {
 		foreach ($this->getFieldSpecifications() as $fieldName => $fieldType) {
 			if (!isset($data[$fieldName])) {

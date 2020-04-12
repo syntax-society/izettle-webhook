@@ -43,6 +43,12 @@ function saveMessage(string $filename, array $message) {
 	file_put_contents($filename, $json, LOCK_EX);
 }
 
+$logger = new Logger(
+	Logger::NONE,
+	Logger::DEBUG,
+	$config['logFilename']
+);
+
 // read config
 $json = file_get_contents('config.json');
 $config = json_decode($json, true);
@@ -56,6 +62,9 @@ saveMessage($config['eventLogFilename'], $eventData);
 $event = new Event($eventData);
 
 if (!$event->isValid($signature, $signingKey)) {
+	$logger->warning('Invalid authorization. Sending HTTP 401');
+	$logger->warning('signature: ' . $signature);
+
 	http_response_code(401);
 	$url = $_SERVER['REQUEST_URI'];
 	echo <<<RESPONSE
@@ -72,12 +81,6 @@ RESPONSE;
 	die();
 }
 
-$logger = new Logger(
-	Logger::INFO,
-	Logger::INFO,
-	$config['logFilename']
-);
-
-$event->handle($logger);
+$event->handle($logger, $config);
 $logger->debug('Webhook finished properly');
 ?>

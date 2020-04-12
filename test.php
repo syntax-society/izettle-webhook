@@ -21,10 +21,12 @@ if ($argc !== 2) {
 
 $data = $messages[$argv[1]];
 
-$logger = new Logger(Logger::INFO);
+$logger = new Logger(
+	Logger::DEBUG,
+);
 
 $event = new Event($data);
-$event->handle($logger);
+$event->handle($logger, $config);
 
 $logger->info("testing done!");
 

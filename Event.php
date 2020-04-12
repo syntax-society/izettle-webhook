@@ -26,7 +26,7 @@ class Event extends \Model {
 		return $signature === $calculatedSignature;
 	}
 
-	public function handle(Logger $logger) {
+	public function handle(Logger $logger, array $config) {
 		if (!$this->eventName) {
 			throw new \Exception('Event name missing!');
 		}
@@ -34,6 +34,6 @@ class Event extends \Model {
 
 		$className = 'SyntaxSociety\\' . $this->eventName . '\\' . $this->eventName;
 		$e = new $className($data);
-		$e->perform($logger);
+		$e->perform($logger, $config);
 	}
 }
