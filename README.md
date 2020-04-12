@@ -4,12 +4,14 @@ PHP application for receiving events from iZettles webhook interface documented 
 
 ## Important files
 
-- config.json - A JSON file that should contain the following:
+- config.json - A JSON file that should at least contain the following:
+
 		{
 			"signing_key": "(your signing key returned when creating the subscription)",
 			"eventLogFilename": "(the name of the JSON file where events will be stored)"
 			"logFilename": "(the name of the file for the regular logging)"
 		}
+
 - izettle-webhook.php - The endpoint for the webhook. This is the file that receives the HTTP requests from iZettle
 - .htaccess - A simple htaccess file that restricts access to all files except `izettle-webhook.php`
 - composer.json - The Composer configuration which specifies which PHP libraries we're using
