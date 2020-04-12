@@ -13,19 +13,13 @@ use znexx\Logger;
 
 class PurchaseCreated extends \Model implements \SyntaxSociety\WebhookEventInterface {
 
-	public function perform(): void {
+	public function perform(Logger $logger): void {
 		foreach ($this->products as $product) {
-			$this->handleProduct($product);
+			$this->handleProduct($logger, $product);
 		}
 	}
 
-	protected function handleProduct(Product $product) {
-		$logger = new Logger(
-			Logger::INFO,
-			Logger::INFO,
-			'log.txt'
-		);
-
+	protected function handleProduct(Logger $logger, Product $product) {
 		switch ($product->name) {
 		case 'Medlemsavgift':
 			$nickname = $product->variantName;

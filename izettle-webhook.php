@@ -2,6 +2,8 @@
 
 require_once('Event.php');
 
+use znexx\Logger;
+
 $headers = apache_request_headers();
 $signature = $headers['X-iZettle-Signature'];
 
@@ -70,12 +72,12 @@ RESPONSE;
 	die();
 }
 
-$event->handle();
-
 $logger = new Logger(
 	Logger::INFO,
 	Logger::INFO,
-	'log.txt'
+	$config['logFilename']
 );
+
+$event->handle($logger);
 $logger->debug('Webhook finished properly');
 ?>

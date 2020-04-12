@@ -3,27 +3,30 @@
 
 require_once('Event.php');
 
+use znexx\Logger;
+
 $json = file_get_contents('config.json');
 $config = json_decode($json, true);
 
 $body = file_get_contents($config['eventLogFilename']);
 $messages = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
 
-if ($argc !== 3) {
+if ($argc !== 2) {
 	echo "Please provide a timestamp of the following:" . PHP_EOL;
 	foreach (array_keys($messages) as $timestamp) {
 		echo "$timestamp" . PHP_EOL;
 	}
-	print_r($argv);
 	die();
 }
 
-$data = $messages[$argv[1] . ' ' . $argv[2]];
+$data = $messages[$argv[1]];
 
-var_dump($data);
+$logger = new Logger(Logger::INFO);
 
 $event = new Event($data);
-$event->handle($config);
+$event->handle($logger);
+
+$logger->info("testing done!");
 
 function arrDiff(array $a1, array $a2):array {
     $r = array();

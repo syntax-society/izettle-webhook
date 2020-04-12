@@ -4,6 +4,8 @@ require_once('Model.php');
 require_once('ProductUpdated.php');
 require_once('PurchaseCreated.php');
 
+use znexx\Logger;
+
 class Event extends \Model {
 
 	public function getFieldSpecifications(): array {
@@ -24,7 +26,7 @@ class Event extends \Model {
 		return $signature === $calculatedSignature;
 	}
 
-	public function handle(array $config) {
+	public function handle(Logger $logger) {
 		if (!$this->eventName) {
 			throw new \Exception('Event name missing!');
 		}
@@ -32,6 +34,6 @@ class Event extends \Model {
 
 		$className = 'SyntaxSociety\\' . $this->eventName . '\\' . $this->eventName;
 		$e = new $className($data);
-		$e->perform();
+		$e->perform($logger);
 	}
 }
