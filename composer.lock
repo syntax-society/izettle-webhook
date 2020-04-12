@@ -1,0 +1,53 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "5bc1f6a2e0a373bceeb6d60b81fb68d2",
+    "packages": [
+        {
+            "name": "znexx/logger",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/znexx/logger.git",
+                "reference": "2c275dff485b6c926a67c6fda48848eb8ec4ac6c"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "znexx\\": "./"
+                }
+            },
+            "license": [
+                "WTFPL"
+            ],
+            "authors": [
+                {
+                    "name": "Johan Osvaldsson",
+                    "email": "znexxpwnz0r@gmail.com",
+                    "homepage": "https://kattm.at/"
+                }
+            ],
+            "description": "Loggin library which can log both to the console (stdout) and to a file",
+            "homepage": "https://kattm.at/",
+            "keywords": [
+                "log",
+                "logger",
+                "logging"
+            ],
+            "time": "2020-04-12T02:18:11+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "znexx/logger": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

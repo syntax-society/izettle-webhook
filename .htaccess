@@ -1,0 +1,4 @@
+Order Allow,Deny
+<FilesMatch "^izettle-webhook\.php$">
+Allow from all
+</FilesMatch>
