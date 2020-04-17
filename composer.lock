@@ -4,8 +4,42 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5bc1f6a2e0a373bceeb6d60b81fb68d2",
+    "content-hash": "b996d151c9881e3665f44f26494098b3",
     "packages": [
+        {
+            "name": "znexx/izettle-client-webhook",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/znexx/izettle-client-webhook.git",
+                "reference": "d7edaa32efcff541c62f3b5dd930dd2007100daa"
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "znexx\\iZettle\\webhook\\": "src/"
+                }
+            },
+            "license": [
+                "wtfpl"
+            ],
+            "authors": [
+                {
+                    "name": "z-nexx",
+                    "homepage": "https://kattm.at/"
+                }
+            ],
+            "homepage": "http://kattm.at/",
+            "keywords": [
+                "api",
+                "php",
+                "sdk"
+            ],
+            "time": "2020-04-17T00:43:29+00:00"
+        },
         {
             "name": "znexx/logger",
             "version": "dev-master",
@@ -44,7 +78,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "znexx/logger": 20
+        "znexx/logger": 20,
+        "znexx/izettle-client-webhook": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
