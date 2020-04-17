@@ -4,6 +4,7 @@ PHP application for receiving events from iZettles webhook interface documented 
 
 ## Important files
 
+- `.htaccess`: A simple htaccess file that restricts access to all files except `izettle-webhook.php`
 - `config.json` - A JSON file that should at least contain the following:
 
 		{
@@ -12,8 +13,7 @@ PHP application for receiving events from iZettles webhook interface documented 
 			"logFilename": "(the name of the file for the regular logging)"
 		}
 
-- `izettle-webhook.php`: The endpoint for the webhook. This is the file that receives the HTTP requests from iZettle
-- `.htaccess`: A simple htaccess file that restricts access to all files except `izettle-webhook.php`
+- `CustomEvent.php`: The PHP class describing the whole event. This is essentially a PHP representation of the JSON data sent from iZettle.
 - `composer.json`: The Composer configuration which specifies which PHP libraries we're using
-- `Event.php`: The PHP class describing the whole event. This is essentially a PHP representation of the JSON data sent from iZettle.
-- `Model.php`: The superclass of a lot of these PHP classes. Serializes as JSON and sets properties according to an array received in its constructor. Also deserializes these child properties into corresponding objects.
+- `izettle-webhook.php`: The endpoint for the webhook. This is the file that receives the HTTP requests from iZettle
+- `test.php`: A simple PHP script that parses the list of received events and can replay them at will
