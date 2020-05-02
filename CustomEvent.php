@@ -30,6 +30,7 @@ class CustomEvent extends Event {
 		}
 		$data = json_decode($this->payload, true);
 
+
 		switch ($this->eventName) {
 		case 'ProductUpdated':
 			$e = new ProductUpdated($data);
@@ -52,15 +53,15 @@ class CustomEvent extends Event {
 
 	protected function handlePurchaseCreated(PurchaseCreated $purchaseCreated) {
 		foreach ($purchaseCreated->products as $product) {
-			$this->handleProductPurchased($product);
+			$this->handleProductPurchased($product, $purchaseCreated->created);
 		}
 	}
 
-	protected function handleProductPurchased(Product $product) {
+	protected function handleProductPurchased(Product $product, string $createdTimestamp) {
 		switch ($product->name) {
 		case 'Medlemsavgift':
 			$nickname = $product->variantName;
-			$dateTime = new \DateTime($this->created);
+			$dateTime = new \DateTime($createdTimestamp);
 
 			try {
 				if ($product->quantity > 0) {

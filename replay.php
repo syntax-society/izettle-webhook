@@ -15,7 +15,7 @@ $messages = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
 if ($argc !== 3) {
 	echo 'Please provide a timestamp of the following:' . PHP_EOL;
 	foreach (array_keys($messages) as $timestamp) {
-		echo "$timestamp" . PHP_EOL;
+		echo "$timestamp (" . $messages[$timestamp]['eventName'] . ")" . PHP_EOL;
 	}
 	echo 'And a signature (provide an invalid to get the calculated answer' . PHP_EOL;
 	die();
