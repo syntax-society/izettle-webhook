@@ -1,0 +1,6 @@
+.*
+log.txt
+todo.txt
+*.json
+composer.phar
+/vendor/
