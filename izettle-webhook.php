@@ -5,7 +5,7 @@ require_once(__DIR__ . '/vendor/autoload.php');
 
 use znexx\Logger;
 
-$json = file_get_contents('config.json');
+$json = file_get_contents('.config.json');
 $config = json_decode($json, true);
 
 $logger = new Logger(
@@ -40,6 +40,10 @@ if (array_key_exists('X-iZettle-Signature', $headers) && $headers['X-iZettle-Sig
 RESPONSE;
 	die();
 }*/
+
+/**
+ * Saves a request into a JSON file with its timestamp as key
+ */
 
 function saveMessage(string $filename, array $message) {
 	$json = file_get_contents($filename);

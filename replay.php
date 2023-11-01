@@ -6,7 +6,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use znexx\Logger;
 
-$json = file_get_contents(__DIR__ . '/config.json');
+$json = file_get_contents(__DIR__ . '/.config.json');
 $config = json_decode($json, true);
 
 $body = file_get_contents(__DIR__ . '/' . $config['eventLogFilename']);
